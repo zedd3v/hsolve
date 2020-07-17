@@ -11,7 +11,7 @@ $ npm install hsolve
 ## Usage
 
 ```javascript
-const hsolve = require('hsolve').default;
+const hsolve = require('hsolve');
 
 // Typescript: import hsolve from 'hsolve';
 

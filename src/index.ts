@@ -1,6 +1,6 @@
 import got, { Agents } from "got";
 import * as URL from "url";
-import * as _ from "lodash";
+import _ from "lodash";
 import * as VM from "vm";
 import { v4 as uuidv4 } from "uuid";
 import { generateUA, generateMouse, sleep, createAgents } from "./functions";
@@ -94,7 +94,9 @@ const siteConfig = async (
 
 const hsl = async (req: string) => {
   try {
-    const { body } = await got(`https://assets.hcaptcha.com/c/500c658/hsl.js`);
+    const { body } = await got(
+      `https://assets.hcaptcha.com/c/500c658/hsl.js`
+    );
     return new Promise((resolve, reject) => {
       VM.runInNewContext(
         `var self={};function atob(a){return Buffer.from(a,'base64').toString('binary')} ${body} hsl('${req}').then(resolve).catch(reject)`,
@@ -160,7 +162,9 @@ const submitCaptcha = async (
   timestamp: number,
   key: string,
   jobType: string,
-  answers: object,
+  answers: {
+    [key: string]: any;
+  },
   agent?: Agents
 ): Promise<string> => {
   try {
@@ -223,11 +227,11 @@ const hsolve = async (
     const timeoutCheck =
       timeout !== null
         ? setInterval(() => {
-            if (Date.now() - startTimestamp > timeout) {
-              clearInterval(timeoutCheck);
-              throw new Error("hSolve Timeout");
-            }
-          }, 200)
+          if (Date.now() - startTimestamp > timeout) {
+            clearInterval(timeoutCheck);
+            throw new Error("hSolve Timeout");
+          }
+        }, 200)
         : null;
 
     const agents = proxy ? createAgents(proxy) : undefined;
@@ -247,21 +251,24 @@ const hsolve = async (
       agents
     );
 
-    if (captchaTask.generated_pass_UUID) return captchaTask.generated_pass_UUID;
+    if (captchaTask.generated_pass_UUID)
+      return captchaTask.generated_pass_UUID;
 
-    const question = captchaTask.requester_question.en.includes("containing an")
+    const question = captchaTask.requester_question.en.includes(
+      "containing an"
+    )
       ? captchaTask.requester_question.en.split(
-          "Please click each image containing an "
-        )[1]
+        "Please click each image containing an "
+      )[1]
       : captchaTask.requester_question.en
-          .split("Please click each image containing a ")[1]
-          .toLowerCase();
+        .split("Please click each image containing a ")[1]
+        .toLowerCase();
 
-    const answers = await classifyImages(
+    const answers = (await classifyImages(
       solveService,
       captchaTask.tasklist,
       question
-    );
+    )).reduce((obj, ans) => Object.assign(obj, { [Object.keys(ans)[0]]: ans[Object.keys(ans)[0]] }), {});
 
     const solution = await submitCaptcha(
       hostname,
