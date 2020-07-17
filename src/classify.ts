@@ -26,8 +26,12 @@ const initiateAWSClient = (awsAccessKey: string, awsSecretAccessKey: string, aws
 };
 
 const getRawImage = async (url: string): Promise<Buffer> => {
-    const { rawBody } = await got(url, { encoding: null });
-    return rawBody;
+    try {
+        const { body } = await got(url, { responseType: `buffer` });
+        return body;
+    } catch (e) {
+        throw new Error(e);
+    }
 };
 
 
@@ -97,7 +101,7 @@ const classify = async (solveService: SolveService, image: ImageTask, question: 
     }
 }
 
-export const classifyImages = async (solveService: SolveService, images: ImageTask[], question: string): Promise<ImageSolution[]> => {
+const classifyImages = async (solveService: SolveService, images: ImageTask[], question: string): Promise<ImageSolution[]> => {
     try {
         const promises = [];
         for (let i = 0; i < images.length; i++) {
@@ -108,3 +112,5 @@ export const classifyImages = async (solveService: SolveService, images: ImageTa
         throw new Error(e);
     }
 }
+
+export default classifyImages;
