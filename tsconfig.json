@@ -3,10 +3,15 @@
         "module": "CommonJS",
         "target": "ESNext",
         "declaration": true,
+        "declarationDir": "./dist",
         "outDir": "./dist",
-        "noImplicitAny": true
+        "noImplicitAny": true,
+        "esModuleInterop": true
     },
     "include": [
-        "src/**/*",
+        "src/**/*"
+    ],
+    "exclude": [
+        "dist/"
     ]
 }

@@ -3,7 +3,14 @@ import * as _ from "lodash";
 import * as AWS from 'aws-sdk';
 import { ComputerVisionClient } from "@azure/cognitiveservices-computervision";
 import { ApiKeyCredentials } from "@azure/ms-rest-js";
-import { ImageTask, ImageSolution, SolveService, CustomRecognitionResult } from './types';
+import { ImageTask, ImageSolution, SolveService } from './index';
+
+interface CustomRecognitionResult {
+    success: boolean;
+    message: {
+        className: string;
+    }[];
+}
 
 const initiateAWSClient = (awsAccessKey: string, awsSecretAccessKey: string, awsRegion: string) => {
     const config = new AWS.Config({

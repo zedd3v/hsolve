@@ -4,8 +4,63 @@ import * as _ from "lodash";
 import * as VM from "vm";
 import { v4 as uuidv4 } from 'uuid';
 import { generateUA, generateMouse, sleep, createAgents } from './functions';
-import { SiteConfig, CaptchaTask, SolveService } from './types';
 import { classifyImages } from './solve';
+
+export interface SolveService {
+    name: "random" | "aws" | "azure" | "custom";
+    awsAccessKey?: string;
+    awsSecretAccessKey?: string;
+    awsRegion?: string;
+    azureApiKey?: string;
+    azureEndpoint?: string;
+    customUrl?: string;
+}
+
+export interface ImageTask {
+    datapoint_uri: string;
+    task_key: string;
+}
+
+export interface ImageSolution {
+    [key: string]: boolean;
+}
+
+interface SiteConfig {
+    pass: boolean;
+    c: {
+        type: string;
+        req: string;
+    };
+}
+
+interface CaptchaTask {
+    challenge_uri: string;
+    key: string;
+    request_config: {
+        version: number;
+        shape_type: null;
+        min_points: null;
+        max_points: null;
+        min_shapes_per_image: null;
+        max_shapes_per_image: null;
+        restrict_to_coords: null;
+        minimum_selection_area_per_shape: null;
+        multiple_choice_max_choices: number;
+        multiple_choice_min_choices: number;
+    },
+    request_type: string;
+    requester_question: {
+        en: string;
+    };
+    requester_question_example: string[],
+    tasklist: ImageTask[];
+    'bypass-message': string;
+    c: {
+        type: string;
+        req: string;
+    };
+    generated_pass_UUID?: string;
+}
 
 const siteConfig = async (host: string, siteKey: string, userAgent: string, agent?: Agents): Promise<SiteConfig["c"]> => {
     const { body } = await got(`https://hcaptcha.com/checksiteconfig`, {

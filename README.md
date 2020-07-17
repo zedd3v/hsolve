@@ -1,4 +1,4 @@
-# HSolve
+# hSolve
 
 A library for solving HCaptcha.
 

@@ -1,4 +1,4 @@
-import UserAgent = require('user-agents');
+import UserAgent from 'user-agents';
 import * as http from "http";
 import * as https from "https";
 import { parse } from "url";
