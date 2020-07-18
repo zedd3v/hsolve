@@ -62,6 +62,7 @@ Example json response from your api:
 
 ## Maintainer
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ef0263db65e44b5886beed7e8aa0381)](https://app.codacy.com/manual/zedd3v/hsolve?utm_source=github.com&utm_medium=referral&utm_content=zedd3v/hsolve&utm_campaign=Badge_Grade_Dashboard)
 [![ZedDev](https://github.com/zedd3v.png?size=100)](https://abck.dev/)
 
 ## Contributing
